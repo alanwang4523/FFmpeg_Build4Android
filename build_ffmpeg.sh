@@ -101,13 +101,14 @@ function configure_ffmpeg {
 
   ./configure \
     --prefix=${TARGET_PREFIX} \
+    --enable-gpl \
     --disable-shared \
     --enable-static \
     --disable-small \
     --disable-stripping \
     --disable-debug \
-    --enable-ffmpeg \
-    --enable-pthreads \
+    --disable-ffmpeg \
+    --disable-pthreads \
     --disable-w32threads \
     --disable-os2threads \
     --disable-ffplay \
