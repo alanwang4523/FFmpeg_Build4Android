@@ -57,6 +57,7 @@ function configure_ffmpeg {
 
     TOOLCHAIN_PATH=$ANDROID_NDK/toolchains/x86-4.9/prebuilt/$HOST_OS_ARCH
     CROSS_PREFIX=$TOOLCHAIN_PATH/bin/$TOOLCHAIN_PREFIX-
+    CROSS_GCC_LIB=$TOOLCHAIN_PATH/lib/gcc/$TOOLCHAIN_PREFIX/4.9.x
 
     SYSROOT=$ANDROID_NDK/platforms/android-$API_LEVEL/arch-x86
     SYSROOT_INC=$SYSROOT/usr/include
@@ -72,6 +73,7 @@ function configure_ffmpeg {
 
     TOOLCHAIN_PATH=$ANDROID_NDK/toolchains/x86_64-4.9/prebuilt/$HOST_OS_ARCH
     CROSS_PREFIX=$TOOLCHAIN_PATH/bin/$TOOLCHAIN_PREFIX-
+    CROSS_GCC_LIB=$TOOLCHAIN_PATH/lib/gcc/$TOOLCHAIN_PREFIX/4.9.x
 
     SYSROOT=$ANDROID_NDK/platforms/android-$API_LEVEL/arch-x86_64
     SYSROOT_INC=$SYSROOT/usr/include
