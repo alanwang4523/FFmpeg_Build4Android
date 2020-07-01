@@ -20,7 +20,7 @@ if [ -z "$MY_CMAKE" ]; then
   exit 1
 fi
 
-OUTPUT_LIBS="./build/libs/android"
+OUTPUT_LIBS="./output"
 
 
 # arme_abis=(armeabi armeabi-v7a arm64-v8a x86 x86_64 mips mips64)
@@ -52,14 +52,18 @@ function build_with_armeabi() {
 	-DANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL} \
 	-DANDROID_TOOLCHAIN="clang" \
 	-DCMAKE_C_FLAGS="-fpic -fexceptions -frtti -Wno-narrowing" \
-	-DCMAKE_CXX_FLAGS="-fpic -fexceptions -frtti -Wno-narrowing" \
-	-DANDROID_STL="c++_static" \
+	-DCMAKE_CXX_FLAGS="-fpic -fexceptions -frtti -std=c++11 -Wno-narrowing" \
+	-DANDROID_STL="c++_static"
 
 
 	cd ${BUILD_DIR}
+	make clean
 	make
-	make install
+
+	cd ${PRE_EXE_DIR}
+	mkdir -p ${OUTPUT_LIBS}/${ARME_ABI}/
+	cp ${BUILD_DIR}/ffmpeg_tool ${OUTPUT_LIBS}/${ARME_ABI}/
 }
 
-build_with_armeabi armeabi-v7a 16
-# build_with_armeabi arm64-v8a 21
+# build_with_armeabi armeabi-v7a 16
+build_with_armeabi arm64-v8a 21
