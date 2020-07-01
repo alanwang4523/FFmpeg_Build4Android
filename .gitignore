@@ -1,0 +1,5 @@
+*
+!*.md
+!*.sh
+!config
+!.gitignore
