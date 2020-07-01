@@ -65,5 +65,5 @@ function build_with_armeabi() {
 	cp ${BUILD_DIR}/ffmpeg_tool ${OUTPUT_LIBS}/${ARME_ABI}/
 }
 
-# build_with_armeabi armeabi-v7a 16
+build_with_armeabi armeabi-v7a 16
 build_with_armeabi arm64-v8a 21
