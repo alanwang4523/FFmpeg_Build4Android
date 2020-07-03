@@ -17,14 +17,15 @@ message(${FFMPEG_LIB_PATH})
 include_directories(${FFMPEG_PATH})
 include_directories(${FFMPEG_PATH}/ffmpeg/include)
 
-# file(GLOB_RECURSE SRC_FILES_FFMPEG ${FFMPEG_PATH}/*.c)
+# fmpeg.c:4786: multiple definition of `main'
+# CMakeFiles/feature_tests.c:34: first defined here
+#file(GLOB_RECURSE SRC_FILES_FFMPEG ${FFMPEG_PATH}/*.c)
 set(SRC_FILES_FFMPEG
     ${FFMPEG_PATH}/ffmpeg.c
     ${FFMPEG_PATH}/cmdutils.c
     ${FFMPEG_PATH}/ffmpeg_filter.c
     ${FFMPEG_PATH}/ffmpeg_hw.c
     ${FFMPEG_PATH}/ffmpeg_opt.c)
-
 
 find_library(log-lib log)
 

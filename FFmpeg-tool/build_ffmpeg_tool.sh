@@ -3,7 +3,7 @@
 # Author: AlanWang
 # Email: alanwang4523@gmail.com
 # Date: 2020-07-01
-# @FileName: build_android.sh
+# @FileName: build_ffmpeg_tool.sh
 
 # MY_NDK 和 MY_CMAKE 需要改成自己对应的 ndk 中的目录
 MY_NDK="/Users/wangjianjun/AndroidDev/android-ndk-r15c"
@@ -37,6 +37,7 @@ function build_with_armeabi() {
 	OUTPUT_SO_DIR="${BUILD_DIR}/build/android/libs/${ARME_ABI}"
 
 	echo ${BUILD_DIR}
+	rm -r ${BUILD_DIR}
 
 	PRE_EXE_DIR=$(pwd)
 	echo ${PRE_EXE_DIR}
@@ -52,7 +53,7 @@ function build_with_armeabi() {
 	-DANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL} \
 	-DANDROID_TOOLCHAIN="clang" \
 	-DCMAKE_C_FLAGS="-fpic -fexceptions -frtti -Wno-narrowing" \
-	-DCMAKE_CXX_FLAGS="-fpic -fexceptions -frtti -std=c++11 -Wno-narrowing" \
+	-DCMAKE_CXX_FLAGS="-fpic -fexceptions -frtti -Wno-narrowing" \
 	-DANDROID_STL="c++_static"
 
 
