@@ -109,8 +109,8 @@ function configure_ffmpeg {
     --disable-small \
     --disable-stripping \
     --disable-debug \
-    --disable-ffmpeg \
-    --disable-pthreads \
+    --enable-ffmpeg \
+    --enable-pthreads \
     --disable-w32threads \
     --disable-os2threads \
     --disable-ffplay \
@@ -196,6 +196,7 @@ function merge_static_to_share
     $TARGET_PREFIX/lib/libavformat.a \
     $TARGET_PREFIX/lib/libavutil.a \
     $TARGET_PREFIX/lib/libswscale.a \
+    $TARGET_PREFIX/lib/libpostproc.a \
     ${X264_LIB_PATH}/lib/libopenh264.a \
     -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker \
     $CROSS_GCC_LIB/libgcc.a
