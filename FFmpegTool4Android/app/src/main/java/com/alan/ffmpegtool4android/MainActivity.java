@@ -10,6 +10,8 @@ import com.alan.ffmpegtool4android.utils.FileUtils;
 import com.alan.ffmpegtool4android.utils.RuntimePermissionsManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TEST_CMD_STR = " -i /sdcard/Alan/ffmpeg/test.mp4";
 
     // TODO 多视频合并 都 OK
-    // -y -f concat -safe 0 -i /sdcard/Alan/ffmpeg/src/input_files.txt -c copy /sdcard/Alan/ffmpeg/output_concat.mp4
+//     -y -f concat -safe 0 -i /sdcard/Alan/ffmpeg/src/input_files.txt -c copy /sdcard/Alan/ffmpeg/output_concat.mp4
 //    private static final String TEST_CMD_STR = " -y -f concat -safe 0 -i /sdcard/Alan/ffmpeg/src/input_files.txt " +
 //            "-c copy /sdcard/Alan/ffmpeg/output_concat.mp4";
 
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 //                    "-vcodec copy -acodec copy -ss 00:00:10 -t 00:00:30 -f mp4 -movflags faststart -strict -2 -an %s",
 //            "/sdcard/Alan/ffmpeg/4.mp4", 200, "/sdcard/Alan/ffmpeg/out_trim.mp4");
 
-    // TODO 加水印 Ok [ VideoWaterMarkUtil.kt markVideo() #line 65 ]
+    // TODO 加水印 Ok
     // -y -i /sdcard/Alan/ffmpeg/test.mp4 -i /sdcard/Alan/ffmpeg/video_watermark.png -b:v 5120k -acodec copy -filter_complex "[1]scale=200:-1[water];[0][water]overlay=main_w-overlay_w-20:main_h-overlay_h-20" -filter_complex_threads 4  -f mp4 -vcodec libopenh264 /sdcard/Alan/ffmpeg/out_watermark.mp4
 //    private static final String TEST_CMD_STR = String.format(Locale.US, " -y -i %s -i %s -b:v %dk -acodec copy " +
 //                    "-filter_complex \"[1]scale=%d:-1[water];[0][water]overlay=main_w-overlay_w-%d:main_h-overlay_h-%d\" " +

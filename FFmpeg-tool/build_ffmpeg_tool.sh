@@ -63,7 +63,7 @@ function build_with_armeabi() {
 
 	cd ${PRE_EXE_DIR}
 	mkdir -p ${OUTPUT_LIBS}/${ARME_ABI}/
-	cp ${BUILD_DIR}/ffmpeg_tool ${OUTPUT_LIBS}/${ARME_ABI}/
+	cp ${BUILD_DIR}/ffmpeg_tool ${OUTPUT_LIBS}/${ARME_ABI}/libffmpeg_tool.so
 }
 
 build_with_armeabi armeabi-v7a 16
