@@ -188,7 +188,7 @@ function merge_static_to_share
   ${CROSS_PREFIX}ld \
     -rpath-link=$SYSROOT/usr/lib \
     -L$SYSROOT/usr/lib \
-    -soname libffmpeg.so -shared -nostdlib -Bsymbolic --whole-archive -o \
+    -soname libffmpeg.so -shared -Bsymbolic --whole-archive -o \
     $TARGET_PREFIX/lib/libffmpeg.so \
     $TARGET_PREFIX/lib/libavcodec.a \
     $TARGET_PREFIX/lib/libavfilter.a \
@@ -198,7 +198,7 @@ function merge_static_to_share
     $TARGET_PREFIX/lib/libswscale.a \
     $TARGET_PREFIX/lib/libpostproc.a \
     ${X264_LIB_PATH}/lib/libopenh264.a \
-    -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker \
+    -lstdc++ -fPIC -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker \
     $CROSS_GCC_LIB/libgcc.a
 }
 
