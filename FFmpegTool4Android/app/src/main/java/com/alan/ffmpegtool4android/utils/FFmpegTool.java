@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import dalvik.system.PathClassLoader;
 
 /**
@@ -25,7 +26,7 @@ public class FFmpegTool {
         void onPrintInfo(boolean error, String line);
     }
 
-
+    private final static String FFMPEG_SO_FILE_NAME = "libffmpeg.so";
     private final static String FFMPEG_TOOL_NAME = "libffmpeg_tool.so"; // depend on libffmpeg.so
 
     private static FFmpegTool mInstance;
@@ -103,17 +104,20 @@ public class FFmpegTool {
         String filepath = getSoFilePath();
         if (!TextUtils.isEmpty(filepath)) {
             String nativeLibrariesPath = mContext.getApplicationContext().getApplicationInfo().nativeLibraryDir;
-            Log.d(TAG , "nativeLibrariesPath : " + nativeLibrariesPath);
-            String[] envp = {"LD_LIBRARY_PATH=" + nativeLibrariesPath};
+            Log.e(TAG ," nativeLibrariesPath = " + nativeLibrariesPath);
+
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            Map<String, String> envMap = processBuilder.environment();
+            envMap.put("LD_LIBRARY_PATH", nativeLibrariesPath);
 
             String _cmd = String.format("%s %s", filepath, cmd);
-            Log.d("FFmpegUtils", "_cmd:" + _cmd);
-            //If the -c option is present, then commands are read from string. If there are arguments after the string, they are assigned to the positional parameters, starting with $0.
+            Log.d(TAG, "_cmd:" + _cmd);
             String[] commands = { "sh", "-c", _cmd };
-            return Runtime.getRuntime().exec(commands, envp);
-        } else {
-            return null;
+            processBuilder.command(commands);
+
+            return processBuilder.start();
         }
+        return null;
     }
 
     private String getSoFilePath() {
