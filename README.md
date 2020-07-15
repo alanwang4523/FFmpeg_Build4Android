@@ -44,13 +44,17 @@ Build FFmpeg for Android with cross compile chain
 6. **ffmpeg_tool  adb 测试**
 
    ```shell
-   adb push ffmpeg_tool /data/local/tmp
+   # 将 libffmpeg_tool.so 和 libffmpeg.so 放到 /data/local/tmp 目录
+   adb push libffmpeg_tool.so /data/local/tmp
    adb push libffmpeg.so /data/local/tmp
+   # adb shell 并进入 /data/local/tmp 目录
    adb shell
    cd /data/local/tmp
-   export LD_LIBRARY_PATH=/data/local/tmp:$LD_LIBRARY_PATH // 不加这个会找不到 libffmpeg.so
-   chmod +x ffmpeg_tool // 赋予可执行权限
-   ./ffmpeg_tool -i test.mp4
+   # 给 libffmpeg_tool.so 赋予可执行权限
+   chmod +x libffmpeg_tool.so
+   # 增加链接库路径（因为 libffmpeg_tool.so 执行时需要依赖 libffmpeg.so，不加这个会报错找不到 libffmpeg.so）
+   export LD_LIBRARY_PATH=/data/local/tmp:$LD_LIBRARY_PATH
+   ./libffmpeg_tool.so -i /sdcard/Alan/ffmpeg/test.mp4
    ```
 
 7. **ffmpeg_tool Android 项目中测试**
