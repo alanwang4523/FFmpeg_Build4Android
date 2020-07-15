@@ -1,6 +1,8 @@
 # FFmpeg_Build4Android
 Build FFmpeg for Android with cross compile chain
 
+[我的相关博客](https://blog.csdn.net/u011520181/article/details/107357250)
+
 #### 编译 ffmpeg_toos.so 步骤：
 
 1. **准备 FFmpeg 源码：**
@@ -55,11 +57,26 @@ Build FFmpeg for Android with cross compile chain
 
    ```java
    // 把 libffmpeg.so 和 libffmpeg_tool.so(由 ffmpeg_tool 重命名)放到 libs 目录下打包到 APK
-   // 在使用 Runtime.getRuntime().exec 执行命令行时需加上环境变量，否则执行命令的时候会找不到 libffmpeg.so：
-   String nativeLibrariesPath = mContext.getApplicationContext().getApplicationInfo().nativeLibraryDir;
-   String[] envp = {"LD_LIBRARY_PATH=" + nativeLibrariesPath};
-   String _cmd = String.format("%s %s", ffmpgeToolPath, cmd);
-   Runtime.getRuntime().exec(commands, envp);
+   // 在使用 ProcessBuilder 执行命令行时需加上环境变量，否则执行命令的时候会找不到 libffmpeg.so：
+   private Process exec(String cmd) throws IOException {
+           String filepath = getSoFilePath();
+           if (!TextUtils.isEmpty(filepath)) {
+               String nativeLibrariesPath = mContext.getApplicationContext().getApplicationInfo().nativeLibraryDir;
+               Log.e(TAG ," nativeLibrariesPath = " + nativeLibrariesPath);
+
+               ProcessBuilder processBuilder = new ProcessBuilder();
+               Map<String, String> envMap = processBuilder.environment();
+               envMap.put("LD_LIBRARY_PATH", nativeLibrariesPath);
+
+               String _cmd = String.format("%s %s", filepath, cmd);
+               Log.d(TAG, "_cmd:" + _cmd);
+               String[] commands = { "sh", "-c", _cmd };
+               processBuilder.command(commands);
+
+               return processBuilder.start();
+           }
+           return null;
+       }
    ```
 
 - 注：以上项目根目录均指 README 所在目录
