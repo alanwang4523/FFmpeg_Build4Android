@@ -84,16 +84,8 @@ Build FFmpeg for Android with cross compile chain
    ```
 
 - 注：以上项目根目录均指 README 所在目录
+
 - 当前目录结构如下：
 
-.
-├── FFmpeg-n4.0.2
-├── FFmpeg-n4.0.2.zip
-├── FFmpeg-tool
-├── LICENSE
-├── README.md
-├── build_ffmpeg.sh
-├── build_openh264.sh
-├── configure
-├── libs
-└── openh264-2.1.1.zip
+  ![目录结构](./Screenshots/001.png)
+
