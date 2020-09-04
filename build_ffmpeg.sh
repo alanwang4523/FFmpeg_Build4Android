@@ -129,6 +129,7 @@ function configure_ffmpeg {
     --enable-parser=h264\
     --disable-devices \
     --enable-decoder=aac \
+    --enable-decoder=mp3 \
     --enable-decoder=pcm_s16le \
     --enable-decoder=pcm_f32le \
     --enable-decoder=h264\
@@ -152,6 +153,7 @@ function configure_ffmpeg {
     --disable-demuxers \
     --enable-demuxer=h264 \
     --enable-demuxer=aac \
+    --enable-demuxer=mp3 \
     --enable-demuxer=wav \
     --enable-demuxer=flv \
     --enable-demuxer=avi \
@@ -167,6 +169,11 @@ function configure_ffmpeg {
     --enable-filter=hflip \
     --enable-filter=vflip \
     --enable-filter=overlay \
+    --enable-filter=pad \
+    --enable-filter=fade \
+    --enable-filter=movie \
+    --enable-filter=amovie \
+    --enable-filter=concat \
     --enable-zlib \
     --enable-runtime-cpudetect \
     --cross-prefix=$CROSS_PREFIX \
