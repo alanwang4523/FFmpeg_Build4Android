@@ -111,6 +111,7 @@ function configure_ffmpeg {
     --disable-debug \
     --enable-ffmpeg \
     --enable-pthreads \
+    --enable-jni \
     --disable-w32threads \
     --disable-os2threads \
     --disable-ffplay \
@@ -124,6 +125,7 @@ function configure_ffmpeg {
     --disable-parsers \
     --disable-protocols \
     --enable-protocol=file \
+    --enable-protocol=stmedia \
     --enable-parser=aac \
     --enable-parser=mpegaudio \
     --enable-parser=h264\

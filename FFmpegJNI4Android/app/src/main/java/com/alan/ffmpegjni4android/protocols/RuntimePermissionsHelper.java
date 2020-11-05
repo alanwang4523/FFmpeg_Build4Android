@@ -1,4 +1,4 @@
-package com.alan.ffmpegjni4android.protoclos;
+package com.alan.ffmpegjni4android.protocols;
 
 import android.Manifest;
 import android.app.Activity;

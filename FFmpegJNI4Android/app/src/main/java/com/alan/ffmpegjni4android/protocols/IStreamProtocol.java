@@ -1,4 +1,4 @@
-package com.alan.ffmpegjni4android.protoclos;
+package com.alan.ffmpegjni4android.protocols;
 
 /**
  * Author: AlanWang4523.
@@ -7,7 +7,7 @@ package com.alan.ffmpegjni4android.protoclos;
  */
 public interface IStreamProtocol {
 
-    void open(String uri);
+    int open(String uri);
 
     int read(byte[] buffer, int offset, int size);
 

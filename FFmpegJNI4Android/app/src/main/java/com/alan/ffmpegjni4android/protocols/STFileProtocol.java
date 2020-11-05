@@ -1,4 +1,6 @@
-package com.alan.ffmpegjni4android.protoclos;
+package com.alan.ffmpegjni4android.protocols;
+
+import android.util.Log;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,18 +16,26 @@ public class STFileProtocol implements IStreamProtocol {
     private RandomAccessFile mFile;
 
     @Override
-    public void open(String uri) {
+    public int open(String uri) {
         try {
             mFile = new RandomAccessFile(uri, "r");
+            Log.e("STFileProtocol", "open()--->length = " + mFile.length());
+            return 0;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return -1;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1;
         }
     }
 
     @Override
     public int read(byte[] buffer, int offset, int size) {
         try {
-            return mFile.read(buffer, offset, size);
+            int readLen =  mFile.read(buffer, offset, size);
+            Log.e("STFileProtocol", "read()--->readLen = " + readLen);
+            return readLen;
         } catch (IOException e) {
             e.printStackTrace();
         }

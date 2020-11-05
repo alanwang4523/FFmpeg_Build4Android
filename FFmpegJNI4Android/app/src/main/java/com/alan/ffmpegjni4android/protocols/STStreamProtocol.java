@@ -1,4 +1,4 @@
-package com.alan.ffmpegjni4android.protoclos;
+package com.alan.ffmpegjni4android.protocols;
 
 import android.util.Log;
 
@@ -13,10 +13,10 @@ public class STStreamProtocol implements IStreamProtocol {
     private IStreamProtocol streamProtocol;
 
     @Override
-    public void open(String uri) {
+    public int open(String uri) {
         Log.e(TAG, "open()-->>" + uri);
         streamProtocol = new STFileProtocol();
-        streamProtocol.open(uri);
+        return streamProtocol.open(uri);
     }
 
     @Override
