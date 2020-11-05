@@ -46,6 +46,10 @@
 
 #include "libswresample/swresample.h"
 
+#include <android/log.h>
+#define LOGE(TAG, ...) __android_log_print(ANDROID_LOG_ERROR, TAG, __VA_ARGS__)
+#define LOGD(TAG, ...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
+
 #define VSYNC_AUTO       -1
 #define VSYNC_PASSTHROUGH 0
 #define VSYNC_CFR         1
@@ -663,5 +667,7 @@ int hw_device_setup_for_decode(InputStream *ist);
 int hw_device_setup_for_encode(OutputStream *ost);
 
 int hwaccel_decode_init(AVCodecContext *avctx);
+
+int ffmpeg_run(int argc, char **argv);
 
 #endif /* FFTOOLS_FFMPEG_H */

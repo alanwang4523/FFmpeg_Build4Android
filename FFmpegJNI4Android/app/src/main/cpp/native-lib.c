@@ -1,28 +1,31 @@
 #include <jni.h>
-#include <string>
+#include <string.h>
 #include <malloc.h>
+#include "libavcodec/jni.h"
 
-#include <android/log.h>
+#include "ffmpeg.h"
 
-#define LOGE(TAG, ...) __android_log_print(ANDROID_LOG_ERROR, TAG, __VA_ARGS__)
 
-int ffmpeg_run(int argc, char **argv) {
+int ffmpeg_run_test(int argc, char **argv) {
 
-    LOGE("ffmpeg_run", "argc = %d", argc);
-    for (int i = 0; i < argc; ++i) {
-        LOGE("ffmpeg_run", "argv[%d] = %s", i, argv[i]);
-    }
+//    LOGE("ffmpeg_run", "argc = %d", argc);
+//    for (int i = 0; i < argc; ++i) {
+//        LOGE("ffmpeg_run", "argv[%d] = %s", i, argv[i]);
+//    }
     return 0;
 }
 
-extern "C" JNIEXPORT jint JNICALL
-Java_com_alan_ffmpegjni4android_MainActivity_exeFFmpegCommand(
-        JNIEnv* env, jobject obj, jstring js_cmd) {
+JNIEXPORT jint JNICALL Java_com_alan_ffmpegjni4android_MainActivity_exeFFmpegCommand(
+        JNIEnv *env, jobject obj, jstring js_cmd) {
 //    std::string hello = "Hello from C++";
 //    return env->NewStringUTF(hello.c_str());
 
+    JavaVM * jvm;
+    (*env)->GetJavaVM(env, &jvm);
+    av_jni_set_java_vm(jvm, NULL);
+
     jboolean is_copy = 0;
-    const char* c_command = (char*)env->GetStringUTFChars(js_cmd, &is_copy);
+    const char* c_command = (char*)(*env)->GetStringUTFChars(env, js_cmd, &is_copy);
     int c_command_len = strlen(c_command);
 
     int argc = 0;
@@ -48,7 +51,8 @@ Java_com_alan_ffmpegjni4android_MainActivity_exeFFmpegCommand(
     }
 
     // 执行 ffmpeg 命令
-    int ret = ffmpeg_run(argc, argv);
+    int ret = ffmpeg_run_test(argc, argv);
+    ret = ffmpeg_run(argc, argv);
 
     // 释放内存
     for(int i = 0; i < argc; i++){
@@ -57,7 +61,7 @@ Java_com_alan_ffmpegjni4android_MainActivity_exeFFmpegCommand(
     }
 
     if(c_command != NULL) {
-        env->ReleaseStringUTFChars(js_cmd, c_command);
+        (*env)->ReleaseStringUTFChars(env, js_cmd, c_command);
     }
 
     return ret;

@@ -4780,10 +4780,24 @@ static int64_t getmaxrss(void)
 
 static void log_callback_null(void *ptr, int level, const char *fmt, va_list vl)
 {
+    static int print_prefix = 1;
+    static int count;
+    static char prev[1024];
+    char line[1024];
+    static int is_atty;
+    av_log_format_line(ptr, level, fmt, vl, line, sizeof(line), &print_prefix);
+    strcpy(prev, line);
+    if (level <= AV_LOG_WARNING){
+        LOGE("ffmpeg_run", "%s", line);
+    }else{
+        LOGD("ffmpeg_run", "%s", line);
+    }
 }
 
-int main(int argc, char **argv)
+int ffmpeg_run(int argc, char **argv)
 {
+    av_log_set_callback(log_callback_null);
+
     int i, ret;
     int64_t ti;
 

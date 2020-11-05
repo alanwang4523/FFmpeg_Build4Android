@@ -5,6 +5,15 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
+set(CPP_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+set(THIRD_PARTY_PATH ${CPP_PATH}/third_party)
+set(THIRD_PARTY_LIB_PATH ${CPP_PATH}/../libs/${ANDROID_ABI})
+
+include_directories(${THIRD_PARTY_PATH}/ffmpeg/include)
+include_directories(${CPP_PATH}/ffmpeg)
+
+file(GLOB_RECURSE C_FILES_IN_FFMPEG  ${CPP_PATH}/ffmpeg/*.c)
+
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
@@ -15,9 +24,10 @@ add_library( # Sets the name of the library.
 
              # Sets the library as a shared library.
              SHARED
-
              # Provides a relative path to your source file(s).
-             native-lib.cpp )
+             native-lib.c
+             ${C_FILES_IN_FFMPEG}
+        )
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
@@ -42,5 +52,7 @@ target_link_libraries( # Specifies the target library.
                        # Links the target library to the log library
                        # included in the NDK.
                        ${log-lib}
+
+                        ${THIRD_PARTY_LIB_PATH}/libffmpeg.so
                         z m
         )

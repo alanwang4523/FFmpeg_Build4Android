@@ -20,9 +20,6 @@ android {
         externalNativeBuild {
             cmake {
                 arguments '-DANDROID_ARM_NEON=TRUE', '-DANDROID_STL=c++_static'
-                cFlags '-O3','-fpic', '-fsigned-char', '-Wformat'
-                cppFlags '-O3','-fpic', '-fexceptions', '-Wformat',
-                        '-fsigned-char', "-frtti -std=c++11 -fopenmp"
             }
         }
     }

@@ -2,9 +2,12 @@ package com.alan.ffmpegjni4android;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import com.alan.ffmpegjni4android.protoclos.RuntimePermissionsHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,12 +16,13 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("native-lib");
     }
 
-//    private static final String TEST_CMD_STR = " -i stmedia:/sdcard/Alan/ffmpeg/test.mp4";
+//    private static final String TEST_CMD_STR = "ffmpeg -i /sdcard/Alan/ffmpeg/test.mp4";
+    private static final String TEST_CMD_STR = "ffmpeg -i /sdcard/Alan/ffmpeg/test.mp4 -vcodec copy /sdcard/Alan/ffmpeg/test_out.mp4";
 
     // TODO 多视频合并 都 OK
 //     -y -f concat -safe 0 -i /sdcard/Alan/ffmpeg/src/input_files.txt -c copy /sdcard/Alan/ffmpeg/output_concat.mp4
-    private static final String TEST_CMD_STR = " -y -f concat -safe 0 -i /sdcard/Alan/ffmpeg/src/input_files.txt " +
-            "-c copy /sdcard/Alan/ffmpeg/output_concat.mp4";
+//    private static final String TEST_CMD_STR = " -y -f concat -safe 0 -i /sdcard/Alan/ffmpeg/src/input_files.txt " +
+//            "-c copy /sdcard/Alan/ffmpeg/output_concat.mp4";
 
     // TODO 音频 + 图片 生成视频用于分享 OK
     // -y -loop 1 -r 0.1 -i /sdcard/Alan/ffmpeg/src/image_01.png -i /sdcard/Alan/ffmpeg/src/music.m4a -c:a copy -c:v libopenh264 -allow_skip_frames 1 -g 30 -r 15 -t 9000 -shortest /sdcard/Alan/ffmpeg/av_video.mp4
@@ -65,6 +69,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        RuntimePermissionsHelper runtimePermissionsHelper = RuntimePermissionsHelper.create(this, null,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (!runtimePermissionsHelper.allPermissionsGranted()) {
+            runtimePermissionsHelper.makeRequest();
+        }
 
         // Example of a call to a native method
         TextView tv = findViewById(R.id.sample_text);
