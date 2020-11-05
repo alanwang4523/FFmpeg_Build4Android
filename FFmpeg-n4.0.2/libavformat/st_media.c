@@ -166,8 +166,6 @@ static int stmedia_read(URLContext *h, unsigned char *buf, int size)
     }
 
     ret = (*env)->CallIntMethod(env, context->obj_stream_protocol, context->jfields.jmd_read, jbuffer, 0, size);
-    av_log(NULL, AV_LOG_DEBUG, "stmedia_read()-->>size: %d, jbuffer_capacity: %d, ret: %d\n",
-        size, context->jbuffer_capacity, ret);
     if (ret < 0) {
         ret = AVERROR(EIO);
         goto exit;
@@ -183,7 +181,6 @@ exit:
 
 static int64_t stmedia_seek(URLContext *h, int64_t pos, int whence)
 {
-    av_log(NULL, AV_LOG_DEBUG, "stmedia_seek()-->>whence: %d, pos: %ld\n", whence, pos);
     STMediaContext *context = h->priv_data;
     int ret = -1;
     JNIEnv *env = NULL;

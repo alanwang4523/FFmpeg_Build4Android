@@ -1,75 +1,23 @@
 package com.alan.ffmpegjni4android.protocols;
 
-import android.util.Log;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 /**
  * Author: AlanWang4523.
  * Date: 2020/11/3 19:20.
  * Mail: alanwang4523@gmail.com
  */
-public class STFileProtocol implements IStreamProtocol {
-
-    private RandomAccessFile mFile;
+public class STFileProtocol extends STBaseStreamProtocol {
 
     @Override
-    public int open(String uri) {
+    protected InputStream getInputStream(String uriString) {
+        InputStream inputStream = null;
         try {
-            mFile = new RandomAccessFile(uri, "r");
-            Log.e("STFileProtocol", "open()--->length = " + mFile.length());
-            return 0;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return -1;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return -1;
+            inputStream = new FileInputStream(new File(uriString));
+        } catch (Exception ignored) {
         }
-    }
-
-    @Override
-    public long getSize() {
-        if (mFile != null) {
-            try {
-                return mFile.length();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return 0;
-    }
-
-    @Override
-    public int read(byte[] buffer, int offset, int size) {
-        try {
-            int readLen =  mFile.read(buffer, offset, size);
-            Log.e("STFileProtocol", "read()--->readLen = " + readLen);
-            return readLen;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    @Override
-    public int seek(long position, int whence) {
-        try {
-            mFile.seek(position);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    @Override
-    public void close() {
-        try {
-            mFile.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return inputStream;
     }
 }
