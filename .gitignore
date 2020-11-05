@@ -1,4 +1,6 @@
 FFmpeg-n4.0.2/
+!FFmpeg-n4.0.2/libavformat/st_media.c
+!FFmpeg-n4.0.2/libavformat/protocols.c
 FFmpeg-n4.0.2.zip
 openh264-2.1.1/
 openh264-2.1.1.zip
