@@ -9,9 +9,11 @@ public interface IStreamProtocol {
 
     int open(String uri);
 
+    long getSize();
+
     int read(byte[] buffer, int offset, int size);
 
-    int seek(long position);
+    int seek(long position, int whence);
 
     void close();
 }

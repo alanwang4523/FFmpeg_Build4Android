@@ -20,15 +20,20 @@ public class STStreamProtocol implements IStreamProtocol {
     }
 
     @Override
+    public long getSize() {
+        return streamProtocol.getSize();
+    }
+
+    @Override
     public int read(byte[] buffer, int offset, int size) {
         Log.e(TAG, "read()-->>offset = " + offset + " size = " + size);
         return streamProtocol.read(buffer, offset, size);
     }
 
     @Override
-    public int seek(long position) {
-        Log.e(TAG, "seek()-->>" + position);
-        return streamProtocol.seek(position);
+    public int seek(long position, int whence) {
+        Log.e(TAG, "seek()-->>" + position + ", whence = " + whence);
+        return streamProtocol.seek(position, whence);
     }
 
     @Override

@@ -31,6 +31,18 @@ public class STFileProtocol implements IStreamProtocol {
     }
 
     @Override
+    public long getSize() {
+        if (mFile != null) {
+            try {
+                return mFile.length();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
+    @Override
     public int read(byte[] buffer, int offset, int size) {
         try {
             int readLen =  mFile.read(buffer, offset, size);
@@ -43,7 +55,7 @@ public class STFileProtocol implements IStreamProtocol {
     }
 
     @Override
-    public int seek(long position) {
+    public int seek(long position, int whence) {
         try {
             mFile.seek(position);
         } catch (IOException e) {
