@@ -1,7 +1,7 @@
 package com.alan.ffmpegjni4android.protocols;
 
 import android.content.Context;
-import java.io.IOException;
+
 import java.io.InputStream;
 
 /**
@@ -9,7 +9,7 @@ import java.io.InputStream;
  * Date: 2020/11/5 19:32.
  * Mail: alanwang4523@gmail.com
  */
-public class STAssetProtocol extends STBaseStreamProtocol {
+public class STAssetProtocol extends STBaseProtocol {
 
     private Context mContext;
 

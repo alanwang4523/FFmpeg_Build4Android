@@ -1,5 +1,7 @@
 package com.alan.ffmpegjni4android.protocols;
 
+import android.util.Log;
+
 import java.io.InputStream;
 
 /**
@@ -7,7 +9,7 @@ import java.io.InputStream;
  * Date: 2020/11/5 19:46.
  * Mail: alanwang4523@gmail.com
  */
-public abstract class STBaseStreamProtocol implements IStreamProtocol {
+abstract class STBaseProtocol implements IStreamProtocol {
 
     private static final int SEEK_SET = 0;
     private static final int SEEK_CUR = 1;
@@ -27,6 +29,9 @@ public abstract class STBaseStreamProtocol implements IStreamProtocol {
         }
         try {
             mStreamSize = mInputStream.available();
+            if (mInputStream.markSupported()) {
+                mInputStream.mark((int) mStreamSize);
+            }
             return SUCCESS;
         } catch (Exception ignored) {
         }
@@ -55,7 +60,24 @@ public abstract class STBaseStreamProtocol implements IStreamProtocol {
     public int seek(long position, int whence) {
         if (mInputStream != null) {
             try {
-                mCurPosition = mInputStream.skip(getSeekPosition(position, whence));
+                long posNeedSeekTo = getSeekPosition(position, whence);
+                long needSkipLen = posNeedSeekTo - mCurPosition;
+                long skipLen;
+                if (needSkipLen < 0) {
+                    // 往回跳转
+                    if (mInputStream.markSupported()) {
+                        mInputStream.reset();
+                        mCurPosition = 0;
+                        needSkipLen = posNeedSeekTo;
+                    } else {
+                        return ERROR_SEEK;
+                    }
+                }
+                do {
+                    skipLen = mInputStream.skip(needSkipLen);
+                    mCurPosition += skipLen;
+                    needSkipLen -= skipLen;
+                } while (needSkipLen > 0);
                 return SUCCESS;
             } catch (Exception ignored) {
             }
@@ -74,17 +96,23 @@ public abstract class STBaseStreamProtocol implements IStreamProtocol {
         }
     }
 
+    /**
+     * 获取需要跳转到的绝对位置
+     * @param position 需要跳转
+     * @param whence 跳转方式
+     * @return 需要调整到的绝对位置
+     */
     private long getSeekPosition(long position, int whence) {
-        long realSeekPos;
+        long posNeedSeekTo;
         if (whence == SEEK_SET) {
-            realSeekPos = position;
+            posNeedSeekTo = position;
         } else if (whence == SEEK_CUR) {
-            realSeekPos = mCurPosition + position;
+            posNeedSeekTo = mCurPosition + position;
         } else if (whence == SEEK_END) {
-            realSeekPos = mStreamSize - position;
+            posNeedSeekTo = mStreamSize - position;
         } else {
-            realSeekPos = position;
+            posNeedSeekTo = position;
         }
-        return realSeekPos;
+        return posNeedSeekTo;
     }
 }

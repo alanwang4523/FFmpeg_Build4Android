@@ -9,7 +9,7 @@ import java.io.InputStream;
  * Date: 2020/11/3 19:20.
  * Mail: alanwang4523@gmail.com
  */
-public class STFileProtocol extends STBaseStreamProtocol {
+public class STFileProtocol extends STBaseProtocol {
 
     @Override
     protected InputStream getInputStream(String uriString) {

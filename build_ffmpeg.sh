@@ -9,6 +9,7 @@
 export ANDROID_SDK=/Users/wangjianjun/AndroidDev/sdk
 export ANDROID_NDK=/Users/wangjianjun/AndroidDev/android-ndk-r15c
 
+ST_STREAM_PROTOCOL_CLASS_PATH=\"com/alan/ffmpegjni4android/protocols/STStreamProtocol\"
 HOST_OS_ARCH=darwin-x86_64
 
 function configure_ffmpeg {
@@ -226,8 +227,17 @@ function build_ffmpeg_static {
   fi
 }
 
+function pre_build() {
+  st_media_config_file=$FFMPGE_SOURCE_DIR/libavformat/st_media_config.h
+  if [ -f $st_media_config_file ]; then
+      rm -f $st_media_config_file
+  fi
+  touch $st_media_config_file
+  echo "#define ST_STREAM_PROTOCOL_CLASS_PATH $ST_STREAM_PROTOCOL_CLASS_PATH" > $st_media_config_file
+}
 
 function build_ffmpeg {
+  pre_build
   build_ffmpeg_static  $1 $2
   ${CROSS_PREFIX}strip $TARGET_PREFIX/lib/libffmpeg.so
 }
@@ -243,5 +253,5 @@ fi
 
 cd $FFMPGE_SOURCE_DIR
 
-build_ffmpeg armeabi-v7a 16
+#build_ffmpeg armeabi-v7a 16
 build_ffmpeg arm64-v8a 21

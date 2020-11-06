@@ -8,6 +8,7 @@
 #include "libavutil/opt.h"
 #include "avformat.h"
 #include "url.h"
+#include "st_media_config.h"
 
 #include "libavcodec/ffjni.h"
 
@@ -49,16 +50,16 @@ static const AVClass stmedia_context_class = {
 
 #if CONFIG_STMEDIA_PROTOCOL
 
-#define ST_STREAM_PROTOCOL_PATH "com/alan/ffmpegjni4android/protocols/STStreamProtocol"
+// #define ST_STREAM_PROTOCOL_CLASS_PATH "com/alan/ffmpegjni4android/protocols/STStreamProtocol"
 
 static const struct FFJniField jni_stream_protocol_mapping[] = {
-    { ST_STREAM_PROTOCOL_PATH, NULL, NULL, FF_JNI_CLASS, offsetof(struct JNIStreamProtocolFields, class_streamprotocol), 1 },
-    { ST_STREAM_PROTOCOL_PATH, "<init>", "()V", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_init), 1 },
-    { ST_STREAM_PROTOCOL_PATH, "open", "(Ljava/lang/String;)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_open), 1 },
-    { ST_STREAM_PROTOCOL_PATH, "getSize", "()J", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_getSize), 1 },
-    { ST_STREAM_PROTOCOL_PATH, "read", "([BII)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_read), 1 },
-    { ST_STREAM_PROTOCOL_PATH, "seek", "(JI)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_seek), 1 },
-    { ST_STREAM_PROTOCOL_PATH, "close", "()V", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_close), 1 },
+    { ST_STREAM_PROTOCOL_CLASS_PATH, NULL, NULL, FF_JNI_CLASS, offsetof(struct JNIStreamProtocolFields, class_streamprotocol), 1 },
+    { ST_STREAM_PROTOCOL_CLASS_PATH, "<init>", "()V", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_init), 1 },
+    { ST_STREAM_PROTOCOL_CLASS_PATH, "open", "(Ljava/lang/String;)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_open), 1 },
+    { ST_STREAM_PROTOCOL_CLASS_PATH, "getSize", "()J", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_getSize), 1 },
+    { ST_STREAM_PROTOCOL_CLASS_PATH, "read", "([BII)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_read), 1 },
+    { ST_STREAM_PROTOCOL_CLASS_PATH, "seek", "(JI)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_seek), 1 },
+    { ST_STREAM_PROTOCOL_CLASS_PATH, "close", "()V", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_close), 1 },
     { NULL }
 };
 

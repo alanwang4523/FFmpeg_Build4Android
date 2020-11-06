@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.alan.ffmpegjni4android.protocols.RuntimePermissionsHelper;
+import com.alan.ffmpegjni4android.protocols.STStreamProtocolFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,7 +18,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 //    private static final String TEST_CMD_STR = "ffmpeg -i /sdcard/Alan/ffmpeg/test.mp4";
-    private static final String TEST_CMD_STR = "ffmpeg -y -i stmedia:/sdcard/Alan/ffmpeg/test.mp4 -vcodec copy /sdcard/Alan/ffmpeg/test_out.mp4";
+//    private static final String TEST_CMD_STR = "ffmpeg -y -i stmedia:/sdcard/Alan/ffmpeg/test.mp4 -vcodec copy /sdcard/Alan/ffmpeg/test_out.mp4";
+    private static final String TEST_CMD_STR = "ffmpeg -y -i stmedia:assets://test.mp4 -vcodec copy /sdcard/Alan/ffmpeg/test_out.mp4";
 
     // TODO 多视频合并 都 OK
 //     -y -f concat -safe 0 -i /sdcard/Alan/ffmpeg/src/input_files.txt -c copy /sdcard/Alan/ffmpeg/output_concat.mp4
@@ -75,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
         if (!runtimePermissionsHelper.allPermissionsGranted()) {
             runtimePermissionsHelper.makeRequest();
         }
+
+        STStreamProtocolFactory.setAppContext(this);
 
         // Example of a call to a native method
         TextView tv = findViewById(R.id.sample_text);

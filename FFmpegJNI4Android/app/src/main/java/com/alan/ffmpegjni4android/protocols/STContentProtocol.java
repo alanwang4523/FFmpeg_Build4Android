@@ -9,7 +9,7 @@ import java.io.InputStream;
  * Date: 2020/11/5 19:35.
  * Mail: alanwang4523@gmail.com
  */
-public class STContentProtocol extends STBaseStreamProtocol {
+public class STContentProtocol extends STBaseProtocol {
 
     private Context mContext;
 
