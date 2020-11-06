@@ -36,11 +36,16 @@ public class STStreamProtocol implements IStreamProtocol {
     @Keep
     @Override
     public int read(byte[] buffer, int offset, int size) {
+        int result = ERROR_READ;
         if (streamProtocol != null) {
-            return streamProtocol.read(buffer, offset, size);
+            result = streamProtocol.read(buffer, offset, size);
+            if (result == -1) {
+                result = 0;
+            }
         } else {
-            return ERROR_READ;
+            result = ERROR_READ;
         }
+        return result;
     }
 
     @Keep
