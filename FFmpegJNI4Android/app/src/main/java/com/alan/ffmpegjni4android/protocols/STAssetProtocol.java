@@ -1,7 +1,6 @@
 package com.alan.ffmpegjni4android.protocols;
 
 import android.content.Context;
-
 import java.io.InputStream;
 
 /**

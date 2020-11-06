@@ -1,6 +1,5 @@
 package com.alan.ffmpegjni4android.protocols;
 
-import android.util.Log;
 import androidx.annotation.Keep;
 
 /**
@@ -14,9 +13,9 @@ public class STStreamProtocol implements IStreamProtocol {
 
     private IStreamProtocol streamProtocol;
 
+    @Keep
     @Override
     public int open(String uriString) {
-        Log.e(TAG, "open()-->>" + uriString);
         streamProtocol = STStreamProtocolFactory.create(uriString);
         if (streamProtocol == null) {
             return ERROR_OPEN;
@@ -24,19 +23,19 @@ public class STStreamProtocol implements IStreamProtocol {
         return streamProtocol.open(uriString);
     }
 
+    @Keep
     @Override
     public long getSize() {
         if (streamProtocol != null) {
-            Log.e(TAG, "getSize()-->>" + streamProtocol.getSize());
             return streamProtocol.getSize();
         } else {
             return ERROR_GET_SIZE;
         }
     }
 
+    @Keep
     @Override
     public int read(byte[] buffer, int offset, int size) {
-        Log.e(TAG, "read()-->>offset = " + offset + " size = " + size);
         if (streamProtocol != null) {
             return streamProtocol.read(buffer, offset, size);
         } else {
@@ -44,9 +43,9 @@ public class STStreamProtocol implements IStreamProtocol {
         }
     }
 
+    @Keep
     @Override
     public int seek(long position, int whence) {
-        Log.e(TAG, "seek()-->>" + position + ", whence = " + whence);
         if (streamProtocol != null) {
             return streamProtocol.seek(position, whence);
         } else {
@@ -54,9 +53,9 @@ public class STStreamProtocol implements IStreamProtocol {
         }
     }
 
+    @Keep
     @Override
     public void close() {
-        Log.e(TAG, "close()-->>");
         if (streamProtocol != null) {
             streamProtocol.close();
             streamProtocol = null;

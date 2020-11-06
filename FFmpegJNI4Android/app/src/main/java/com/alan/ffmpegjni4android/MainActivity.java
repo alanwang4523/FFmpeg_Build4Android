@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.alan.ffmpegjni4android.protocols.RuntimePermissionsHelper;
 import com.alan.ffmpegjni4android.protocols.STStreamProtocolFactory;
 
 public class MainActivity extends AppCompatActivity {

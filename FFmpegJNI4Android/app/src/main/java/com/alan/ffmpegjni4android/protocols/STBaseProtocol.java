@@ -1,7 +1,5 @@
 package com.alan.ffmpegjni4android.protocols;
 
-import android.util.Log;
-
 import java.io.InputStream;
 
 /**

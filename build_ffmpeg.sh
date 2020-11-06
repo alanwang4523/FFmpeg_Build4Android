@@ -253,5 +253,5 @@ fi
 
 cd $FFMPGE_SOURCE_DIR
 
-#build_ffmpeg armeabi-v7a 16
+build_ffmpeg armeabi-v7a 16
 build_ffmpeg arm64-v8a 21
