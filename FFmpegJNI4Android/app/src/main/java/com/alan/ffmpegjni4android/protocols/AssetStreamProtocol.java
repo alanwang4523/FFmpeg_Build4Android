@@ -1,31 +1,30 @@
 package com.alan.ffmpegjni4android.protocols;
 
 import android.content.Context;
-import android.net.Uri;
 import java.io.InputStream;
 
 /**
  * Author: AlanWang4523.
- * Date: 2020/11/5 19:35.
+ * Date: 2020/11/5 19:32.
  * Mail: alanwang4523@gmail.com
  */
-public class STContentProtocol extends STBaseProtocol {
+public class AssetStreamProtocol extends InputStreamProtocol {
 
     private Context mContext;
 
-    public STContentProtocol(Context context) {
+    public AssetStreamProtocol(Context context) {
         mContext = context;
     }
 
     @Override
-    protected InputStream getInputStream(String uriString) {
+    protected InputStream getInputStream(String uri) {
         if (mContext == null) {
             return null;
         }
         InputStream inputStream = null;
-        Uri uri = Uri.parse(uriString);
+        String fileName = uri.replace(StreamProtocolFactory.SCHEME_ASSET, "");
         try {
-            inputStream = mContext.getContentResolver().openInputStream(uri);
+            inputStream = mContext.getAssets().open(fileName);
             mContext = null;
         } catch (Exception ignored) {
         }

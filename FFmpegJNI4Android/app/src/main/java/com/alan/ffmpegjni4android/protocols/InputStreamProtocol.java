@@ -7,7 +7,7 @@ import java.io.InputStream;
  * Date: 2020/11/5 19:46.
  * Mail: alanwang4523@gmail.com
  */
-abstract class STBaseProtocol implements IStreamProtocol {
+abstract class InputStreamProtocol implements IStreamProtocol {
 
     private static final int SEEK_SET = 0;
     private static final int SEEK_CUR = 1;

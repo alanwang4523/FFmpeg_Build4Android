@@ -8,15 +8,15 @@ import androidx.annotation.Keep;
  * Mail: alanwang4523@gmail.com
  */
 @Keep
-public class STStreamProtocol implements IStreamProtocol {
-    private static final String TAG = STStreamProtocol.class.getSimpleName();
+public class StreamProtocol implements IStreamProtocol {
+    private static final String TAG = StreamProtocol.class.getSimpleName();
 
     private IStreamProtocol streamProtocol;
 
     @Keep
     @Override
     public int open(String uriString) {
-        streamProtocol = STStreamProtocolFactory.create(uriString);
+        streamProtocol = StreamProtocolFactory.create(uriString);
         if (streamProtocol == null) {
             return ERROR_OPEN;
         }

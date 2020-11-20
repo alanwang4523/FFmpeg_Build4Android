@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.alan.ffmpegjni4android.protocols.STStreamProtocolFactory;
+import com.alan.ffmpegjni4android.protocols.StreamProtocolFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,13 +71,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RuntimePermissionsHelper runtimePermissionsHelper = RuntimePermissionsHelper.create(this, null,
+        RuntimePermissionsManager runtimePermissionsHelper = new RuntimePermissionsManager(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (!runtimePermissionsHelper.allPermissionsGranted()) {
+        if (!runtimePermissionsHelper.isAllPermissionsGranted()) {
             runtimePermissionsHelper.makeRequest();
         }
 
-        STStreamProtocolFactory.setAppContext(this);
+        StreamProtocolFactory.setAppContext(this);
 
         // Example of a call to a native method
         TextView tv = findViewById(R.id.sample_text);

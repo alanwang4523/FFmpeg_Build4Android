@@ -8,7 +8,7 @@ import android.text.TextUtils;
  * Date: 2020/11/5 19:10.
  * Mail: alanwang4523@gmail.com
  */
-public class STStreamProtocolFactory {
+public class StreamProtocolFactory {
 
     public final static String SCHEME_ASSET = "assets://";
     public final static String SCHEME_CONTENT = "content://";
@@ -20,7 +20,7 @@ public class STStreamProtocolFactory {
     }
 
     public static void setAppContext(Context appContext) {
-        STStreamProtocolFactory.sAppContext = appContext.getApplicationContext();
+        StreamProtocolFactory.sAppContext = appContext.getApplicationContext();
     }
 
     public static IStreamProtocol create(String uriString) {
@@ -28,11 +28,11 @@ public class STStreamProtocolFactory {
             return null;
         }
         if (uriString.startsWith(SCHEME_ASSET)) {
-            return new STAssetProtocol(sAppContext);
+            return new AssetStreamProtocol(sAppContext);
         } else if (uriString.startsWith(SCHEME_CONTENT)) {
-            return new STContentProtocol(sAppContext);
+            return new ContentStreamProtocol(sAppContext);
         } else {
-            return new STFileProtocol();
+            return new FileStreamProtocol();
         }
     }
 }
