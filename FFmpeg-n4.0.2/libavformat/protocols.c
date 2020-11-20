@@ -69,7 +69,7 @@ extern const URLProtocol ff_libsrt_protocol;
 extern const URLProtocol ff_libssh_protocol;
 extern const URLProtocol ff_libsmbclient_protocol;
 
-extern const URLProtocol ff_stmedia_protocol;
+extern const URLProtocol ff_asp_protocol;
 
 #include "libavformat/protocol_list.c"
 

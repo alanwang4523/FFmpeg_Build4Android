@@ -1,6 +1,5 @@
 
 #include <jni.h>
-
 #include "libavutil/avassert.h"
 #include "libavutil/mem.h"
 #include "libavutil/avstring.h"
@@ -8,9 +7,8 @@
 #include "libavutil/opt.h"
 #include "avformat.h"
 #include "url.h"
-#include "st_media_config.h"
-
 #include "libavcodec/ffjni.h"
+#include "android_stream_protocol_config.h"
 
 /**
  * Author: AlanWang4523.
@@ -28,50 +26,50 @@ struct JNIStreamProtocolFields {
      jmethodID jmd_close;
 };
 
-typedef struct _STMediaContext {
+typedef struct _ASPContext {
     const AVClass *class;
     struct JNIStreamProtocolFields jfields;
     jobject obj_stream_protocol;
     int64_t media_size;
     jbyteArray jbuffer;
     int jbuffer_capacity;
-} STMediaContext;
+} ASPContext;
 
 static const AVOption options[] = {
     { NULL }
 };
 
-static const AVClass stmedia_context_class = {
-    .class_name = "STMedia",
+static const AVClass asp_context_class = {
+    .class_name = "AndroidStreamProtocol",
     .item_name  = av_default_item_name,
     .option     = options,
     .version    = LIBAVUTIL_VERSION_INT,
 };
 
-#if CONFIG_STMEDIA_PROTOCOL
+#if CONFIG_ASP_PROTOCOL
 
-// #define ST_STREAM_PROTOCOL_CLASS_PATH "com/alan/ffmpegjni4android/protocols/STStreamProtocol"
+// #define ANDROID_STREAM_PROTOCOL_CLASS_PATH "com/alan/ffmpegjni4android/protocols/StreamProtocol"
 
 static const struct FFJniField jni_stream_protocol_mapping[] = {
-    { ST_STREAM_PROTOCOL_CLASS_PATH, NULL, NULL, FF_JNI_CLASS, offsetof(struct JNIStreamProtocolFields, class_streamprotocol), 1 },
-    { ST_STREAM_PROTOCOL_CLASS_PATH, "<init>", "()V", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_init), 1 },
-    { ST_STREAM_PROTOCOL_CLASS_PATH, "open", "(Ljava/lang/String;)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_open), 1 },
-    { ST_STREAM_PROTOCOL_CLASS_PATH, "getSize", "()J", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_getSize), 1 },
-    { ST_STREAM_PROTOCOL_CLASS_PATH, "read", "([BII)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_read), 1 },
-    { ST_STREAM_PROTOCOL_CLASS_PATH, "seek", "(JI)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_seek), 1 },
-    { ST_STREAM_PROTOCOL_CLASS_PATH, "close", "()V", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_close), 1 },
+    { ANDROID_STREAM_PROTOCOL_CLASS_PATH, NULL, NULL, FF_JNI_CLASS, offsetof(struct JNIStreamProtocolFields, class_streamprotocol), 1 },
+    { ANDROID_STREAM_PROTOCOL_CLASS_PATH, "<init>", "()V", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_init), 1 },
+    { ANDROID_STREAM_PROTOCOL_CLASS_PATH, "open", "(Ljava/lang/String;)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_open), 1 },
+    { ANDROID_STREAM_PROTOCOL_CLASS_PATH, "getSize", "()J", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_getSize), 1 },
+    { ANDROID_STREAM_PROTOCOL_CLASS_PATH, "read", "([BII)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_read), 1 },
+    { ANDROID_STREAM_PROTOCOL_CLASS_PATH, "seek", "(JI)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_seek), 1 },
+    { ANDROID_STREAM_PROTOCOL_CLASS_PATH, "close", "()V", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_close), 1 },
     { NULL }
 };
 
-static int stmedia_open(URLContext *h, const char *filename, int flags)
+static int asp_open(URLContext *h, const char *filename, int flags)
 {
-    STMediaContext *context = h->priv_data;
+    ASPContext *context = h->priv_data;
     int ret = -1;
     JNIEnv *env = NULL;
     jobject object = NULL;
     jstring file_uri = NULL;
 
-    av_strstart(filename, "stmedia:", &filename);
+    av_strstart(filename, "asp:", &filename);
 
     env = ff_jni_get_env(context);
     if (!env) {
@@ -120,7 +118,7 @@ exit:
 static jobject get_jbuffer_with_check_capacity(URLContext *h, int new_capacity)
 {
     JNIEnv *env = NULL;
-    STMediaContext *context = h->priv_data;
+    ASPContext *context = h->priv_data;
     jbyteArray local_obj;
 
     if (context->jbuffer && context->jbuffer_capacity >= new_capacity) {
@@ -149,9 +147,9 @@ static jobject get_jbuffer_with_check_capacity(URLContext *h, int new_capacity)
     return context->jbuffer;
 }
 
-static int stmedia_read(URLContext *h, unsigned char *buf, int size)
+static int asp_read(URLContext *h, unsigned char *buf, int size)
 {
-    STMediaContext *context = h->priv_data;
+    ASPContext *context = h->priv_data;
     int ret = -1;
     JNIEnv *env = NULL;
     jbyteArray jbuffer = NULL;
@@ -180,9 +178,9 @@ exit:
     return ret;
 }
 
-static int64_t stmedia_seek(URLContext *h, int64_t pos, int whence)
+static int64_t asp_seek(URLContext *h, int64_t pos, int whence)
 {
-    STMediaContext *context = h->priv_data;
+    ASPContext *context = h->priv_data;
     int ret = -1;
     JNIEnv *env = NULL;
 
@@ -203,9 +201,9 @@ exit:
     return ret;
 }
 
-static int stmedia_close(URLContext *h)
+static int asp_close(URLContext *h)
 {
-    STMediaContext *context = h->priv_data;
+    ASPContext *context = h->priv_data;
     int ret = -1;
     JNIEnv *env = NULL;
 
@@ -222,14 +220,14 @@ exit:
     return ret;
 }
 
-const URLProtocol ff_stmedia_protocol = {
-    .name                = "stmedia",
-    .url_open2           = stmedia_open,
-    .url_read            = stmedia_read,
-    .url_seek            = stmedia_seek,
-    .url_close           = stmedia_close,
-    .priv_data_size      = sizeof(STMediaContext),
-    .priv_data_class     = &stmedia_context_class
+const URLProtocol ff_asp_protocol = {
+    .name                = "asp",
+    .url_open2           = asp_open,
+    .url_read            = asp_read,
+    .url_seek            = asp_seek,
+    .url_close           = asp_close,
+    .priv_data_size      = sizeof(ASPContext),
+    .priv_data_class     = &asp_context_class
 };
 
-#endif /* CONFIG_STMEDIA_PROTOCOL */
+#endif /* CONFIG_ASP_PROTOCOL */

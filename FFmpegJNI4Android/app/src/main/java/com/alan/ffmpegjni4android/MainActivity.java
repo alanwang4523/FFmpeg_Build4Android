@@ -16,9 +16,9 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("native-lib");
     }
 
-//    private static final String TEST_CMD_STR = "ffmpeg -i /sdcard/Alan/ffmpeg/test.mp4";
-//    private static final String TEST_CMD_STR = "ffmpeg -y -i stmedia:/sdcard/Alan/ffmpeg/test.mp4 -vcodec copy /sdcard/Alan/ffmpeg/test_out.mp4";
-    private static final String TEST_CMD_STR = "ffmpeg -y -i stmedia:assets://test.mp4 -vcodec copy /sdcard/Alan/ffmpeg/test_out.mp4";
+    private static final String TEST_CMD_STR = "ffmpeg -i asp:/sdcard/Alan/ffmpeg/test.mp4";
+//    private static final String TEST_CMD_STR = "ffmpeg -y -i asp:/sdcard/Alan/ffmpeg/test.mp4 -vcodec copy /sdcard/Alan/ffmpeg/test_out.mp4";
+//    private static final String TEST_CMD_STR = "ffmpeg -y -i asp:assets://test.mp4 -vcodec copy /sdcard/Alan/ffmpeg/test_out.mp4";
 
     // TODO 多视频合并 都 OK
 //     -y -f concat -safe 0 -i /sdcard/Alan/ffmpeg/src/input_files.txt -c copy /sdcard/Alan/ffmpeg/output_concat.mp4

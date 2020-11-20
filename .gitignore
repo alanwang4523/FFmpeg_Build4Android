@@ -1,5 +1,5 @@
 FFmpeg-n4.0.2/
-!FFmpeg-n4.0.2/libavformat/st_media.c
+!FFmpeg-n4.0.2/libavformat/android_stream_protocol.c
 !FFmpeg-n4.0.2/libavformat/protocols.c
 FFmpeg-n4.0.2.zip
 openh264-2.1.1/

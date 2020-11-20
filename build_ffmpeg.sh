@@ -9,7 +9,7 @@
 export ANDROID_SDK=/Users/wangjianjun/AndroidDev/sdk
 export ANDROID_NDK=/Users/wangjianjun/AndroidDev/android-ndk-r15c
 
-ST_STREAM_PROTOCOL_CLASS_PATH=\"com/alan/ffmpegjni4android/protocols/STStreamProtocol\"
+ANDROID_STREAM_PROTOCOL_CLASS_PATH=\"com/alan/ffmpegjni4android/protocols/StreamProtocol\"
 HOST_OS_ARCH=darwin-x86_64
 
 function configure_ffmpeg {
@@ -126,7 +126,7 @@ function configure_ffmpeg {
     --disable-parsers \
     --disable-protocols \
     --enable-protocol=file \
-    --enable-protocol=stmedia \
+    --enable-protocol=asp \
     --enable-parser=aac \
     --enable-parser=mpegaudio \
     --enable-parser=h264\
@@ -228,12 +228,12 @@ function build_ffmpeg_static {
 }
 
 function pre_build() {
-  st_media_config_file=$FFMPGE_SOURCE_DIR/libavformat/st_media_config.h
-  if [ -f $st_media_config_file ]; then
-      rm -f $st_media_config_file
+  android_stream_protocol_config_file=$FFMPGE_SOURCE_DIR/libavformat/android_stream_protocol_config.h
+  if [ -f $android_stream_protocol_config_file ]; then
+      rm -f $android_stream_protocol_config_file
   fi
-  touch $st_media_config_file
-  echo "#define ST_STREAM_PROTOCOL_CLASS_PATH $ST_STREAM_PROTOCOL_CLASS_PATH" > $st_media_config_file
+  touch $android_stream_protocol_config_file
+  echo "#define ANDROID_STREAM_PROTOCOL_CLASS_PATH $ANDROID_STREAM_PROTOCOL_CLASS_PATH" > $android_stream_protocol_config_file
 }
 
 function build_ffmpeg {
