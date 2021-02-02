@@ -1,5 +1,7 @@
 package com.alan.ffmpegjni4android.protocols;
 
+import java.nio.ByteBuffer;
+
 import androidx.annotation.Keep;
 
 /**
@@ -23,7 +25,7 @@ public interface IStreamProtocol {
     long getSize();
 
     @Keep
-    int read(byte[] buffer, int offset, int size);
+    int read(ByteBuffer buffer, int offset, int size);
 
     @Keep
     int seek(long position, int whence);

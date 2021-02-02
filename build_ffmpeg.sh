@@ -9,7 +9,7 @@
 export ANDROID_SDK=/Users/wangjianjun/AndroidDev/sdk
 export ANDROID_NDK=/Users/wangjianjun/AndroidDev/android-ndk-r15c
 
-ANDROID_STREAM_PROTOCOL_CLASS_PATH=\"com/alan/ffmpegjni4android/protocols/StreamProtocol\"
+ASP_CLASS_PATH=\"com/alan/ffmpegjni4android/protocols/StreamProtocol\"
 HOST_OS_ARCH=darwin-x86_64
 
 function configure_ffmpeg {
@@ -228,12 +228,12 @@ function build_ffmpeg_static {
 }
 
 function pre_build() {
-  android_stream_protocol_config_file=$FFMPGE_SOURCE_DIR/libavformat/android_stream_protocol_config.h
-  if [ -f $android_stream_protocol_config_file ]; then
-      rm -f $android_stream_protocol_config_file
+  asp_config_file=$FFMPGE_SOURCE_DIR/libavformat/asp_config.h
+  if [ -f $asp_config_file ]; then
+      rm -f $asp_config_file
   fi
-  touch $android_stream_protocol_config_file
-  echo "#define ANDROID_STREAM_PROTOCOL_CLASS_PATH $ANDROID_STREAM_PROTOCOL_CLASS_PATH" > $android_stream_protocol_config_file
+  touch $asp_config_file
+  echo "#define ASP_CLASS_PATH $ASP_CLASS_PATH" > $asp_config_file
 }
 
 function build_ffmpeg {

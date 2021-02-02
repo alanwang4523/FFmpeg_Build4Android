@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     // -y -i /sdcard/Alan/ffmpeg/src/st_test_01.mp4 -i /sdcard/Alan/ffmpeg/src/music.m4a -c copy /sdcard/Alan/ffmpeg/muxer_out.mp4
 //    private static final String TEST_CMD_STR = String.format(" -y -i %s -i %s -c copy %s",
 //            "/sdcard/Alan/ffmpeg/src/st_test_01.mp4", "/sdcard/Alan/ffmpeg/src/music.m4a", "/sdcard/Alan/ffmpeg/muxer_out.mp4");
+//    private static final String TEST_CMD_STR = String.format(" -y -i %s -i %s -c copy %s",
+//            "asp:/sdcard/Alan/ffmpeg/test_video.mp4", "asp:/sdcard/Alan/ffmpeg/test_audio.m4a", "/sdcard/Alan/ffmpeg/muxer_out.mp4");
 
     // TODO 音视频旋转 OK
     // -y -i /sdcard/Alan/ffmpeg/src/st_test_01.mp4 -c copy -metadata:s:v rotate=180 /sdcard/Alan/ffmpeg/out_rotate.mp4

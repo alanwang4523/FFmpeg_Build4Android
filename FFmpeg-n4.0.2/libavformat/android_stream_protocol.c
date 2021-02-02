@@ -8,7 +8,7 @@
 #include "avformat.h"
 #include "url.h"
 #include "libavcodec/ffjni.h"
-#include "android_stream_protocol_config.h"
+#include "asp_config.h"
 
 /**
  * Author: AlanWang4523.
@@ -26,12 +26,18 @@ struct JNIStreamProtocolFields {
      jmethodID jmd_close;
 };
 
+struct JNIByteBufferFields {
+     jclass class_byte_buffer;
+     jmethodID jmd_s_allocate_direct;
+};
+
 typedef struct _ASPContext {
     const AVClass *class;
     struct JNIStreamProtocolFields jfields;
+    struct JNIByteBufferFields j_buff_fields;
     jobject obj_stream_protocol;
     int64_t media_size;
-    jbyteArray jbuffer;
+    jobject obj_direct_buf;
     int jbuffer_capacity;
 } ASPContext;
 
@@ -40,7 +46,7 @@ static const AVOption options[] = {
 };
 
 static const AVClass asp_context_class = {
-    .class_name = "AndroidStreamProtocol",
+    .class_name = "ASP",
     .item_name  = av_default_item_name,
     .option     = options,
     .version    = LIBAVUTIL_VERSION_INT,
@@ -48,16 +54,22 @@ static const AVClass asp_context_class = {
 
 #if CONFIG_ASP_PROTOCOL
 
-// #define ANDROID_STREAM_PROTOCOL_CLASS_PATH "com/alan/ffmpegjni4android/protocols/StreamProtocol"
+// #define ASP_CLASS_PATH "com/alan/ffmpegjni4android/protocols/StreamProtocol"
 
 static const struct FFJniField jni_stream_protocol_mapping[] = {
-    { ANDROID_STREAM_PROTOCOL_CLASS_PATH, NULL, NULL, FF_JNI_CLASS, offsetof(struct JNIStreamProtocolFields, class_streamprotocol), 1 },
-    { ANDROID_STREAM_PROTOCOL_CLASS_PATH, "<init>", "()V", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_init), 1 },
-    { ANDROID_STREAM_PROTOCOL_CLASS_PATH, "open", "(Ljava/lang/String;)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_open), 1 },
-    { ANDROID_STREAM_PROTOCOL_CLASS_PATH, "getSize", "()J", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_getSize), 1 },
-    { ANDROID_STREAM_PROTOCOL_CLASS_PATH, "read", "([BII)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_read), 1 },
-    { ANDROID_STREAM_PROTOCOL_CLASS_PATH, "seek", "(JI)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_seek), 1 },
-    { ANDROID_STREAM_PROTOCOL_CLASS_PATH, "close", "()V", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_close), 1 },
+    { ASP_CLASS_PATH, NULL, NULL, FF_JNI_CLASS, offsetof(struct JNIStreamProtocolFields, class_streamprotocol), 1 },
+    { ASP_CLASS_PATH, "<init>", "()V", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_init), 1 },
+    { ASP_CLASS_PATH, "open", "(Ljava/lang/String;)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_open), 1 },
+    { ASP_CLASS_PATH, "getSize", "()J", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_getSize), 1 },
+    { ASP_CLASS_PATH, "read", "(Ljava/nio/ByteBuffer;II)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_read), 1 },
+    { ASP_CLASS_PATH, "seek", "(JI)I", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_seek), 1 },
+    { ASP_CLASS_PATH, "close", "()V", FF_JNI_METHOD, offsetof(struct JNIStreamProtocolFields, jmd_close), 1 },
+    { NULL }
+};
+
+static const struct FFJniField jni_byte_buffer_mapping[] = {
+    { "java/nio/ByteBuffer", NULL, NULL, FF_JNI_CLASS, offsetof(struct JNIByteBufferFields, class_byte_buffer), 1 },
+    { "java/nio/ByteBuffer", "allocateDirect", "(I)Ljava/nio/ByteBuffer;", FF_JNI_STATIC_METHOD, offsetof(struct JNIByteBufferFields, jmd_s_allocate_direct), 1 },
     { NULL }
 };
 
@@ -77,6 +89,10 @@ static int asp_open(URLContext *h, const char *filename, int flags)
     }
 
     if (ff_jni_init_jfields(env, &context->jfields, jni_stream_protocol_mapping, 1, context) < 0) {
+        goto exit;
+    }
+
+    if (ff_jni_init_jfields(env, &context->j_buff_fields, jni_byte_buffer_mapping, 1, context) < 0) {
         goto exit;
     }
 
@@ -119,10 +135,10 @@ static jobject get_jbuffer_with_check_capacity(URLContext *h, int new_capacity)
 {
     JNIEnv *env = NULL;
     ASPContext *context = h->priv_data;
-    jbyteArray local_obj;
+    jobject local_obj;
 
-    if (context->jbuffer && context->jbuffer_capacity >= new_capacity) {
-        return context->jbuffer;
+    if (context->obj_direct_buf && context->jbuffer_capacity >= new_capacity) {
+        return context->obj_direct_buf;
     }
     new_capacity = FFMAX(new_capacity, context->jbuffer_capacity * 2);
 
@@ -130,21 +146,23 @@ static jobject get_jbuffer_with_check_capacity(URLContext *h, int new_capacity)
     if (!env) {
         return NULL;
     }
-    (*env)->DeleteGlobalRef(env, context->jbuffer);
-    context->jbuffer_capacity = 0;
 
-    local_obj = (*env)->NewByteArray(env, new_capacity);
+    if (context->obj_direct_buf) {
+        (*env)->DeleteGlobalRef(env, context->obj_direct_buf);
+        context->jbuffer_capacity = 0;
+    }
+
+    local_obj = (*env)->CallStaticObjectMethod(env, context->j_buff_fields.class_byte_buffer,
+            context->j_buff_fields.jmd_s_allocate_direct, new_capacity);
+
     if (!local_obj) {
         return NULL;
     }
-    context->jbuffer = (*env)->NewGlobalRef(env, local_obj);
-    (*env)->DeleteLocalRef(env, local_obj);
-
-    if (!context->jbuffer) {
-        return NULL;
-    }
+    context->obj_direct_buf = (*env)->NewGlobalRef(env, local_obj);
     context->jbuffer_capacity = new_capacity;
-    return context->jbuffer;
+
+    (*env)->DeleteLocalRef(env, local_obj);
+    return context->obj_direct_buf;
 }
 
 static int asp_read(URLContext *h, unsigned char *buf, int size)
@@ -152,7 +170,8 @@ static int asp_read(URLContext *h, unsigned char *buf, int size)
     ASPContext *context = h->priv_data;
     int ret = -1;
     JNIEnv *env = NULL;
-    jbyteArray jbuffer = NULL;
+    jobject jbuffer = NULL;
+    void * p_buf_data;
 
     env = ff_jni_get_env(context);
     if (!env) {
@@ -169,7 +188,9 @@ static int asp_read(URLContext *h, unsigned char *buf, int size)
         ret = AVERROR(EIO);
         goto exit;
     }
-    (*env)->GetByteArrayRegion(env, jbuffer, 0, ret, (jbyte*)buf);
+
+    p_buf_data = (*env)->GetDirectBufferAddress(env, jbuffer);
+    memcpy(buf, p_buf_data, ret);
 
     if (ret == 0) {
         ret = AVERROR_EOF;
@@ -213,7 +234,7 @@ static int asp_close(URLContext *h)
     }
     (*env)->CallVoidMethod(env, context->obj_stream_protocol, context->jfields.jmd_close);
 
-    (*env)->DeleteGlobalRef(env, context->jbuffer);
+    (*env)->DeleteGlobalRef(env, context->obj_direct_buf);
     (*env)->DeleteGlobalRef(env, context->obj_stream_protocol);
     ret = 0;
 exit:

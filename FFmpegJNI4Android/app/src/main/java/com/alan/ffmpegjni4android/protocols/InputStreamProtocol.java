@@ -1,6 +1,7 @@
 package com.alan.ffmpegjni4android.protocols;
 
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 /**
  * Author: AlanWang4523.
@@ -16,11 +17,13 @@ abstract class InputStreamProtocol implements IStreamProtocol {
     private InputStream mInputStream;
     private long mStreamSize = -1;
     private long mCurPosition = 0;
+    private String mUriString;
 
     protected abstract InputStream getInputStream(String uriString);
 
     @Override
     public int open(String uriString) {
+        mUriString = uriString;
         mInputStream = getInputStream(uriString);
         if (mInputStream == null) {
             return ERROR_OPEN;
@@ -42,13 +45,15 @@ abstract class InputStreamProtocol implements IStreamProtocol {
     }
 
     @Override
-    public int read(byte[] buffer, int offset, int size) {
+    public int read(ByteBuffer buffer, int offset, int size) {
         if (mInputStream != null) {
             try {
-                int readLen = mInputStream.read(buffer, offset, size);
+                buffer.clear();
+                int readLen = mInputStream.read(buffer.array(), buffer.arrayOffset() + offset, size);
                 mCurPosition += readLen;
                 return readLen;
             } catch (Exception ignored) {
+                ignored.printStackTrace();
             }
         }
         return ERROR_READ;
@@ -65,11 +70,15 @@ abstract class InputStreamProtocol implements IStreamProtocol {
                     // 往回跳转
                     if (mInputStream.markSupported()) {
                         mInputStream.reset();
-                        mCurPosition = 0;
-                        needSkipLen = posNeedSeekTo;
                     } else {
-                        return ERROR_SEEK;
+                        mInputStream.close();
+                        mInputStream = getInputStream(mUriString);
+                        if (mInputStream == null) {
+                            return ERROR_SEEK;
+                        }
                     }
+                    mCurPosition = 0;
+                    needSkipLen = posNeedSeekTo;
                 }
                 do {
                     skipLen = mInputStream.skip(needSkipLen);
